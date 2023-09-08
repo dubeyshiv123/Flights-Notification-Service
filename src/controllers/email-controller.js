@@ -1,4 +1,6 @@
+const { StatusCodes } = require("http-status-codes");
 const { EmailService } = require("../services");
+const { SuccessResponse, ErrorResponse } = require("../utils/common");
 
 async function create(req, res) {
   try {
@@ -7,9 +9,11 @@ async function create(req, res) {
       content: req.body.content,
       recepientEmail: req.body.recepientEmail,
     });
-    return res.status(201).json(response);
+    SuccessResponse.data = response;
+    return res.status(StatusCodes.CREATED).json(SuccessResponse);
   } catch (error) {
-    return res.status(500).json(error);
+    ErrorResponse.error = error;
+    return res.status(error.statusCode).json(ErrorResponse);
   }
 }
 
